@@ -59,13 +59,12 @@ st.markdown("""
 # Caches the data so it doesn't reload every time user interacts
 # First load takes time, subsequent loads are instant from cache
 # WHY: Without cache, data reloads on every button click — very slow
-
 @st.cache_data
 def load_data():
-    """Load all CSV files into DataFrames"""
-    base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    data_path = os.path.join(base, 'dashboard', 'data')
-    ml_path   = os.path.join(base, 'ml_models', 'results')
+    """Load all CSV files — works on Render"""
+    # On Render, files are relative to app.py location
+    # Our data folder is in same directory as app.py
+    data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 
     try:
         orders    = pd.read_csv(os.path.join(data_path, 'orders.csv'))
@@ -73,16 +72,16 @@ def load_data():
         products  = pd.read_csv(os.path.join(data_path, 'amazon_products.csv'))
         rfm       = pd.read_csv(os.path.join(data_path, 'rfm_analysis.csv'))
         items     = pd.read_csv(os.path.join(data_path, 'order_items.csv'))
-        clusters  = pd.read_csv(os.path.join(ml_path,  'cluster_summary.csv'))
-        forecast  = pd.read_csv(os.path.join(ml_path,  'revenue_forecast.csv'))
-        churn     = pd.read_csv(os.path.join(ml_path,  'churn_predictions.csv'))
+        clusters  = pd.read_csv(os.path.join(data_path, 'cluster_summary.csv'))
+        forecast  = pd.read_csv(os.path.join(data_path, 'revenue_forecast.csv'))
+        churn     = pd.read_csv(os.path.join(data_path, 'churn_predictions.csv'))
 
-        # Convert date columns
         orders['order_date'] = pd.to_datetime(orders['order_date'])
         orders['year']  = orders['order_date'].dt.year
         orders['month'] = orders['order_date'].dt.month
 
         return orders, customers, products, rfm, items, clusters, forecast, churn
+
     except Exception as e:
         st.error(f"Error loading data: {e}")
         return None
