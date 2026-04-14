@@ -202,17 +202,21 @@ Keep answers focused, under 200 words unless asked for more."""
 # ── DATA LOADING ──────────────────────────────────────────────────────────────
 @st.cache_data
 def load_data():
-    # Works both locally and on Render — files sit next to app.py
     base = os.path.dirname(os.path.abspath(__file__))
+
+    data_path = os.path.join(base, 'dashboard', 'data')
+    ml_path   = os.path.join(base, 'ml_models', 'results')
+
     try:
-        orders    = pd.read_csv(os.path.join(base, 'orders.csv'))
-        customers = pd.read_csv(os.path.join(base, 'customers.csv'))
-        products  = pd.read_csv(os.path.join(base, 'amazon_products.csv'))
-        rfm       = pd.read_csv(os.path.join(base, 'rfm_analysis.csv'))
-        items     = pd.read_csv(os.path.join(base, 'order_items.csv'))
-        clusters  = pd.read_csv(os.path.join(base, 'cluster_summary.csv'))
-        forecast  = pd.read_csv(os.path.join(base, 'revenue_forecast.csv'))
-        churn     = pd.read_csv(os.path.join(base, 'churn_predictions.csv'))
+        orders    = pd.read_csv(os.path.join(data_path, 'orders.csv'))
+        customers = pd.read_csv(os.path.join(data_path, 'customers.csv'))
+        products  = pd.read_csv(os.path.join(data_path, 'amazon_products.csv'))
+        rfm       = pd.read_csv(os.path.join(data_path, 'rfm_analysis.csv'))
+        items     = pd.read_csv(os.path.join(data_path, 'order_items.csv'))
+
+        clusters  = pd.read_csv(os.path.join(ml_path, 'cluster_summary.csv'))
+        forecast  = pd.read_csv(os.path.join(ml_path, 'revenue_forecast.csv'))
+        churn     = pd.read_csv(os.path.join(ml_path, 'churn_predictions.csv'))
 
         orders['order_date'] = pd.to_datetime(orders['order_date'])
         orders['year']       = orders['order_date'].dt.year
@@ -220,6 +224,7 @@ def load_data():
         products['product_id'] = range(1, len(products) + 1)
 
         return orders, customers, products, rfm, items, clusters, forecast, churn
+
     except Exception as e:
         st.error(f"Error loading data: {e}")
         return None
