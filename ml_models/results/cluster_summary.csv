@@ -1,0 +1,5 @@
+cluster,product_count,avg_price,avg_actual_price,avg_discount_pct,avg_rating,avg_savings,cluster_name
+0,20351,1866.05,2601.89,28.1,4.17,735.83,Budget Standard
+1,28396,856.54,2345.36,62.94,3.84,1488.83,High Discount Budget
+2,1091,33168.58,50925.57,36.74,4.1,17756.99,Premium Products
+3,162,2315.12,4240.91,47.6,4.2,1925.79,Budget Standard
