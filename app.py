@@ -7,7 +7,42 @@
 # 5. AI Analyst Bot powered by Groq (FREE — no credit card needed)
 #    Uses Llama 3 via Groq API: console.groq.com
 #    pip install groq
+# ── AUTH SYSTEM ─────────────────────────────────────────────
+import streamlit as st
+import os
 
+# Demo users (you can change later)
+USERS = {
+    "admin": {"password": "admin123", "role": "admin"},
+    "user": {"password": "user123", "role": "viewer"}
+}
+
+# Initialize session
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+if "role" not in st.session_state:
+    st.session_state.role = None
+if "username" not in st.session_state:
+    st.session_state.username = None
+
+
+def login_page():
+    st.markdown("<h2 style='text-align:center;'>🔐 Login</h2>", unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns([1,2,1])
+    with col2:
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+
+        if st.button("Login", use_container_width=True):
+            if username in USERS and USERS[username]["password"] == password:
+                st.session_state.logged_in = True
+                st.session_state.role = USERS[username]["role"]
+                st.session_state.username = username
+                st.success("Login successful!")
+                st.rerun()
+            else:
+                st.error("Invalid username or password")
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -228,6 +263,10 @@ def load_data():
     except Exception as e:
         st.error(f"Error loading data: {e}")
         return None
+# ── LOGIN CHECK ─────────────────────────────────────────────
+if not st.session_state.logged_in:
+    login_page()
+    st.stop()
 
 data = load_data()
 if data is None:
@@ -239,6 +278,15 @@ orders, customers, products, rfm, items, clusters, forecast, churn = data
 # ── SIDEBAR ───────────────────────────────────────────────────────────────────
 st.sidebar.image("https://img.icons8.com/color/96/shopping-cart.png", width=80)
 st.sidebar.title("🛒 E-Commerce Analytics")
+if st.session_state.logged_in:
+    st.sidebar.markdown(f"👤 Logged in as: **{st.session_state.username}**")
+
+if st.sidebar.button("🚪 Logout"):
+    st.session_state.logged_in = False
+    st.session_state.role = None
+    st.session_state.username = None
+    st.rerun()
+
 st.sidebar.markdown("---")
 
 page = st.sidebar.radio(
