@@ -31,6 +31,12 @@ def login_page():
 
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
+        st.info(
+            "👋 Demo Access\n\n"
+            "**Username:** `user`\n\n"
+            "**Password:** `user123`"
+        )
+        
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
 
