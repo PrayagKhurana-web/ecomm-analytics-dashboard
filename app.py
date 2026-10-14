@@ -217,9 +217,9 @@ def call_groq(client, messages, max_tokens=600):
     """
     full_messages = [{"role": "system", "content": PROJECT_SYSTEM_PROMPT}] + messages
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",   # Free Llama 3 model — fast and capable
+        model="openai/gpt-oss-120b",   # Free Llama 3 model — fast and capable
         messages=full_messages,
-        max_tokens=max_tokens,
+        max_tokens=max(max_tokens,1500),
         temperature=0.7
     )
     return response.choices[0].message.content
@@ -1283,7 +1283,7 @@ elif page == "💬 AI Analyst Bot":
     st.markdown('<div class="main-header">💬 AI Analyst Bot</div>', unsafe_allow_html=True)
     st.markdown("""
     Ask anything about this project — the pipeline, ML models, code decisions, or data insights.  
-    **Powered by Llama 3 via Groq — completely free, no credit card required.**
+    **Powered by GPT-OSS via Groq — free to use.**
     """)
 
     client = get_groq_client()
@@ -1402,4 +1402,4 @@ elif page == "💬 AI Analyst Bot":
         st.rerun()
 
     st.markdown("---")
-    st.caption("Powered by Llama 3 (Meta) via Groq API · Free · Multi-turn conversation · Full project context")
+    st.caption("Powered by GPT-OSS via Groq API · Free · Multi-turn conversation · Full project context")
